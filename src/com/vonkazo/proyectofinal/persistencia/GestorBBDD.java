@@ -87,7 +87,7 @@ public class GestorBBDD {
 		st.close();
 		return aLEficiencia;
 	}
-	
+
 	/*
 	 * Metodo que devuelve un arraylist y que utilizamos en la vista para obtener en
 	 * el combobox los modelos
@@ -112,20 +112,22 @@ public class GestorBBDD {
 		st.close();
 		return aLModelos;
 	}
+
 	/*
-	 * Metodo con el que insertamos una tupla en la tabla modelos y ademas devolvemos un boolean dependiendo
-	 * de si se ha insertado bien o no
+	 * Metodo con el que insertamos una tupla en la tabla modelos y ademas
+	 * devolvemos un boolean dependiendo de si se ha insertado bien o no
 	 */
-	public boolean insertarModelo(int id_marca, String modelo, float consumo, float emisiones,
-			String c_energetica) throws SQLException {
+	public boolean insertarModelo(int id_marca, String modelo, float consumo, float emisiones, String c_energetica)
+			throws SQLException {
+
 		boolean insertado = false;
-		String sql = "INSERT INTO modelos VALUES(?,?,?,?,?)";
+		String sql = "INSERT INTO modelos(ID_MARCA, MODELO, CONSUMO, EMISIONES, C_ENERGETICA) VALUES(?,?,?,?,?)";
 		PreparedStatement ps = conexion.prepareStatement(sql);
-		ps.setInt(2, id_marca);
-		ps.setString(3, modelo);
-		ps.setFloat(4, consumo);
-		ps.setFloat(5, emisiones);
-		ps.setString(6, c_energetica);
+		ps.setInt(1, id_marca);
+		ps.setString(2, modelo);
+		ps.setFloat(3, consumo);
+		ps.setFloat(4, emisiones);
+		ps.setString(5, c_energetica);
 		int numRegistrosInsertados = ps.executeUpdate();
 		conexion.setAutoCommit(true);
 
