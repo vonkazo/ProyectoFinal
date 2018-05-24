@@ -6,9 +6,9 @@ public class Modelo {
 	private String marca;
 	private float consumo;
 	private float emisiones;
-	private char c_energetica;
+	private String c_energetica;
 
-	public Modelo(int id, int id_marca, String marca, float consumo, float emisiones, char c_energetica) {
+	public Modelo(int id, int id_marca, String marca, float consumo, float emisiones, String c_energetica) {
 		this.id = id;
 		this.id_marca = id_marca;
 		this.marca = marca;
@@ -57,11 +57,11 @@ public class Modelo {
 		this.emisiones = emisiones;
 	}
 
-	public char getC_energetica() {
+	public String getC_energetica() {
 		return c_energetica;
 	}
 
-	public void setC_energetica(char c_energetica) {
+	public void setC_energetica(String c_energetica) {
 		this.c_energetica = c_energetica;
 	}
 

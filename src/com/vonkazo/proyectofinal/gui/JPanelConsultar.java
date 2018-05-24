@@ -26,10 +26,7 @@ public class JPanelConsultar extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public JPanelConsultar() {
-		// ArrayList de marcas y eficiencia para los combobox
-		ArrayList <Marca> aLMarcas = new ArrayList <Marca>();
-		ArrayList <Modelo> aLModelos = new ArrayList <Modelo>();
+	public JPanelConsultar() {		
 		setLayout(new BorderLayout(0, 0));
 		
 		JToolBar toolBar = new JToolBar();
@@ -76,7 +73,7 @@ public class JPanelConsultar extends JPanel {
 		panel.add(cbMarca);
 		
 		JComboBox cbClasificacion = new JComboBox();
-		cbClasificacion.setBounds(196, 125, 153, 20);
+		cbClasificacion.setBounds(196, 125, 200, 20);
 		panel.add(cbClasificacion);
 		
 		JSlider slConsumo = new JSlider();
@@ -99,13 +96,14 @@ public class JPanelConsultar extends JPanel {
 		
 		try {
 			GestorBBDD gb = new GestorBBDD();
-			aLMarcas = gb.cargaMarcas();
 			
-			for (Marca m : aLMarcas) {
+			for (Marca m : gb.cargaMarcas()) {
 				cbMarca.addItem(m.getMarca());
 			}
 			
-			
+			for (Eficiencia e : gb.cargaCalificacionEnergetica()) {
+				cbClasificacion.addItem(e.getDescripcion());
+			}
 			gb.cerrarConexion();
 		} catch (ClassNotFoundException e1) {
 			System.out.println("Error en carga del driver");

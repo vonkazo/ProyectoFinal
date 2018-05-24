@@ -19,6 +19,8 @@ import com.vonkazo.proyectofinal.modelo.Marca;
 import com.vonkazo.proyectofinal.persistencia.GestorBBDD;
 
 import javax.swing.event.ChangeEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class JPanelCreacion extends JPanel {
 	private JTextField tFModelo;
@@ -27,58 +29,66 @@ public class JPanelCreacion extends JPanel {
 	 * Create the panel.
 	 */
 	public JPanelCreacion() {
-		// ArrayList de marcas y eficiencia para los combobox
-		ArrayList <Marca> aLMarcas = new ArrayList <Marca>();
-		ArrayList <Eficiencia> aLEficiencia = new ArrayList <Eficiencia>();
 		setLayout(new BorderLayout(0, 0));
-		
+
 		JToolBar toolBar = new JToolBar();
 		add(toolBar, BorderLayout.NORTH);
-		
+
 		JButton btnGuardar = new JButton("Guardar");
+		btnGuardar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					GestorBBDD gb = new GestorBBDD();
+					//gb.insertarModelo(id_marca, modelo, consumo, emisiones, c_energetica)
+					gb.cerrarConexion();
+				} catch (Exception e) {
+
+				}
+			}
+		});
 		toolBar.add(btnGuardar);
-		
+
 		JPanel panel = new JPanel();
 		add(panel, BorderLayout.CENTER);
 		panel.setLayout(null);
-		
+
 		JLabel lblMarca = new JLabel("Marca");
 		lblMarca.setBounds(20, 14, 159, 14);
 		panel.add(lblMarca);
-		
+
 		JLabel lblModelo = new JLabel("Modelo");
 		lblModelo.setBounds(20, 65, 159, 14);
 		panel.add(lblModelo);
-		
+
 		JLabel lblConsumokm = new JLabel("Consumo(0/100km)");
 		lblConsumokm.setBounds(20, 116, 159, 14);
 		panel.add(lblConsumokm);
-		
+
 		JLabel lblEmisionesgckm = new JLabel("Emisiones(gC02km)");
 		lblEmisionesgckm.setBounds(20, 161, 159, 14);
 		panel.add(lblEmisionesgckm);
-		
+
 		JLabel lblCalificacinEnergtica = new JLabel("Calificaci\u00F3n energ\u00E9tica");
 		lblCalificacinEnergtica.setBounds(20, 202, 159, 14);
 		panel.add(lblCalificacinEnergtica);
-		
+
 		JComboBox cBMarcas = new JComboBox();
 		cBMarcas.setBounds(204, 11, 169, 20);
 		panel.add(cBMarcas);
-		
+
 		JComboBox cBEficiencia = new JComboBox();
 		cBEficiencia.setBounds(204, 199, 208, 20);
 		panel.add(cBEficiencia);
-		
+
 		tFModelo = new JTextField();
 		tFModelo.setBounds(204, 62, 169, 20);
 		panel.add(tFModelo);
 		tFModelo.setColumns(10);
-		
+
 		JLabel lConsumoContador = new JLabel("0");
 		lConsumoContador.setBounds(383, 110, 46, 20);
 		panel.add(lConsumoContador);
-		
+
 		JSlider sConsumo = new JSlider();
 		sConsumo.setMaximum(205);
 		sConsumo.setValue(0);
@@ -91,11 +101,11 @@ public class JPanelCreacion extends JPanel {
 		sConsumo.setMajorTickSpacing(5);
 		sConsumo.setBounds(204, 116, 169, 14);
 		panel.add(sConsumo);
-		
+
 		JLabel lEmisionesContador = new JLabel("0");
 		lEmisionesContador.setBounds(383, 155, 46, 20);
 		panel.add(lEmisionesContador);
-		
+
 		JSlider sEmisiones = new JSlider();
 		sEmisiones.setMajorTickSpacing(5);
 		sEmisiones.setMaximum(1000);
@@ -107,28 +117,24 @@ public class JPanelCreacion extends JPanel {
 		sEmisiones.setValue(0);
 		sEmisiones.setBounds(204, 161, 169, 14);
 		panel.add(sEmisiones);
-		
+
 		try {
 			GestorBBDD gb = new GestorBBDD();
-			aLMarcas = gb.cargaMarcas();
-			
-			for (Marca m : aLMarcas) {
+
+			for (Marca m : gb.cargaMarcas()) {
 				cBMarcas.addItem(m.getMarca());
 			}
-			
-			aLEficiencia = gb.cargaCalificacionEnergetica();
 
-			for (Eficiencia e : aLEficiencia) {
+			for (Eficiencia e : gb.cargaCalificacionEnergetica()) {
 				cBEficiencia.addItem(e.getDescripcion());
 			}
-			
+
 			gb.cerrarConexion();
 		} catch (ClassNotFoundException e1) {
 			System.out.println("Error en carga del driver");
 		} catch (SQLException e1) {
 			System.out.println();
 		}
-		
+
 	}
 }
-
