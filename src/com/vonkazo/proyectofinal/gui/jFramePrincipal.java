@@ -15,9 +15,13 @@ import javax.swing.JMenuItem;
 import java.awt.CardLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-
+/**
+ * Jframe (Vista) principal de la aplicacion
+ * En este mostraremos diferentes jpanel dependiendo de que quiera
+ * el usuario
+ */
 public class jFramePrincipal extends JFrame {
-
+	// Jpanel de la aplicacion
 	private JPanel contentPane;
 	private JPanelCreacion creacion;
 	private JPanelConsultar consulta;

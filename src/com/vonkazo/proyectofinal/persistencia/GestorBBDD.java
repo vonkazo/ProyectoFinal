@@ -11,23 +11,38 @@ import java.sql.PreparedStatement;
 import com.vonkazo.proyectofinal.modelo.Eficiencia;
 import com.vonkazo.proyectofinal.modelo.Marca;
 import com.vonkazo.proyectofinal.modelo.Modelo;
-
+/**
+ * Clase que gestiona la conexion con la BBDD
+ * Carga el driver y la conexion por las constantes que tiene
+ * @author Vonkazo
+ *
+ */
 public class GestorBBDD {
 	private final static String DRIVER = "com.mysql.jdbc.Driver";
 	private final static String BBDD = "jdbc:mysql://localhost:3306/bbdd_gestmotor";
 	private final static String USER = "dam2018";
 	private final static String PASSWORD = "dam2018";
 	private Connection conexion;
-
+	/**
+	 * Constructor donde cargamos el driver y la conexion de la bbdd
+	 * @throws ClassNotFoundException si no carga el driver
+	 * @throws SQLException si devuelve un fallo la conexion
+	 */
 	public GestorBBDD() throws ClassNotFoundException, SQLException {
 		Class.forName(DRIVER);
 		cargarConexion();
 	}
-
+	/**
+	 * Metodo para cargar la conexion
+	 * @throws SQLException arroja una excepcion si hay algun fallo al cargar conexion
+	 */
 	private void cargarConexion() throws SQLException {
 		conexion = DriverManager.getConnection(BBDD, USER, PASSWORD);
 	}
-
+	/**
+	 * Metodo para cerra conexion
+	 * @throws SQLException
+	 */
 	public void cerrarConexion() throws SQLException {
 		conexion.close();
 	}
@@ -40,9 +55,11 @@ public class GestorBBDD {
 		this.conexion = conexion;
 	}
 
-	/*
+	/**
 	 * Metodo que devuelve un arraylist y que utilizamos en la vista para obtener en
 	 * el combobox las marcas
+	 * @return un arraylist de Marca con todas las marcas
+	 * @throws SQLException
 	 */
 	public ArrayList<Marca> cargaMarcas() throws SQLException {
 		Marca m;
@@ -64,9 +81,11 @@ public class GestorBBDD {
 		return aLMarcas;
 	}
 
-	/*
+	/**
 	 * Metodo que devuelve un arraylist y que utilizamos en la vista para obtener en
 	 * el combobox la calificacion energetica
+	 * @return un arraylist de Eficienci con todas las Calificaciones energeticas
+	 * @throws SQLException
 	 */
 	public ArrayList<Eficiencia> cargaCalificacionEnergetica() throws SQLException {
 		Eficiencia e;
@@ -88,9 +107,11 @@ public class GestorBBDD {
 		return aLEficiencia;
 	}
 
-	/*
+	/**
 	 * Metodo que devuelve un arraylist y que utilizamos en la vista para obtener en
 	 * el combobox los modelos
+	 * @return un arraylist de Modelo con todas los modelos
+	 * @throws SQLException
 	 */
 	public ArrayList<Modelo> cargaModelos() throws SQLException {
 		Modelo m;
@@ -113,9 +134,16 @@ public class GestorBBDD {
 		return aLModelos;
 	}
 
-	/*
+	/**
 	 * Metodo con el que insertamos una tupla en la tabla modelos y ademas
 	 * devolvemos un boolean dependiendo de si se ha insertado bien o no
+	 * @param id_marca
+	 * @param modelo
+	 * @param consumo
+	 * @param emisiones
+	 * @param c_energetica
+	 * @return boolean dependiendo de si se inserta correctamente o no
+	 * @throws SQLException
 	 */
 	public boolean insertarModelo(int id_marca, String modelo, float consumo, float emisiones, String c_energetica)
 			throws SQLException {

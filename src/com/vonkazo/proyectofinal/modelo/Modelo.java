@@ -1,5 +1,9 @@
 package com.vonkazo.proyectofinal.modelo;
-
+/**
+ * Clase modelo que rellenamos con los datos de la tabla modelos de la base de datos
+ * @author Vonkazo
+ *
+ */
 public class Modelo {
 	private int id;
 	private int id_marca;
@@ -7,11 +11,19 @@ public class Modelo {
 	private float consumo;
 	private float emisiones;
 	private String c_energetica;
-
-	public Modelo(int id, int id_marca, String marca, float consumo, float emisiones, String c_energetica) {
+	/**
+	 * Constructor de la clase que recibe los datos de la BBDD
+	 * @param id
+	 * @param id_marca
+	 * @param modelo
+	 * @param consumo
+	 * @param emisiones
+	 * @param c_energetica
+	 */
+	public Modelo(int id, int id_marca, String modelo, float consumo, float emisiones, String c_energetica) {
 		this.id = id;
 		this.id_marca = id_marca;
-		this.modelo = marca;
+		this.modelo = modelo;
 		this.consumo = consumo;
 		this.emisiones = emisiones;
 		this.c_energetica = c_energetica;
