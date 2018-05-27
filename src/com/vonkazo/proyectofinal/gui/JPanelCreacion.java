@@ -113,14 +113,14 @@ public class JPanelCreacion extends JPanel {
 			}
 
 			for (Eficiencia e : gb.cargaCalificacionEnergetica()) {
-				cBEficiencia.addItem(e.getDescripcion());
+				cBEficiencia.addItem(e.getcEnergetica());
 			}
 
 			gb.cerrarConexion();
 		} catch (ClassNotFoundException e1) {
 			System.out.println("Error en carga del driver");
 		} catch (SQLException e1) {
-			System.out.println();
+			e1.printStackTrace();
 		}
 		
 		JButton btnGuardar = new JButton("Guardar");
@@ -129,18 +129,12 @@ public class JPanelCreacion extends JPanel {
 				try {
 					GestorBBDD gb = new GestorBBDD();
 					String eficiencia = cBEficiencia.getSelectedItem().toString();
-					char efiFinal;
-					for (int i = 0; i < eficiencia.length(); i++) {
-						efiFinal=eficiencia.charAt(i);
-						JOptionPane.showMessageDialog(null,efiFinal);
-					}
 					gb.insertarModelo(cBMarcas.getSelectedIndex()+1, tFModelo.getText(), (float)sConsumo.getValue(), (float)sEmisiones.getValue(), eficiencia);
-					JOptionPane.showMessageDialog(null, cBMarcas.getSelectedIndex()+1);
 					gb.cerrarConexion();
+					JOptionPane.showMessageDialog(null,"Modelo insertado con exito");
 					
 				} catch (SQLException e) {
 					JOptionPane.showMessageDialog(null, "Error SQL: " + e.getErrorCode());
-					e.printStackTrace();
 				} catch (ClassNotFoundException e) {
 					JOptionPane.showMessageDialog(null,"Error carga driver");
 				}

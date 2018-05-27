@@ -11,6 +11,7 @@ import com.vonkazo.proyectofinal.modelo.Eficiencia;
 import com.vonkazo.proyectofinal.modelo.Marca;
 import com.vonkazo.proyectofinal.modelo.Modelo;
 import com.vonkazo.proyectofinal.persistencia.GestorBBDD;
+import com.vonkazo.proyectofinal.util.GestorJTable;
 
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
@@ -22,7 +23,8 @@ import javax.swing.JTable;
 
 public class JPanelConsultar extends JPanel {
 	private JTable tTablaConsulta;
-
+	private GestorJTable gjt;
+	ArrayList <Modelo> modelos;
 	/**
 	 * Create the panel.
 	 */
@@ -68,11 +70,11 @@ public class JPanelConsultar extends JPanel {
 		rdbtnClasificacion.setBounds(6, 124, 109, 23);
 		panel.add(rdbtnClasificacion);
 		
-		JComboBox cbMarca = new JComboBox();
+		JComboBox<String> cbMarca = new JComboBox<String>();
 		cbMarca.setBounds(196, 11, 153, 20);
 		panel.add(cbMarca);
 		
-		JComboBox cbClasificacion = new JComboBox();
+		JComboBox<String> cbClasificacion = new JComboBox<String>();
 		cbClasificacion.setBounds(196, 125, 200, 20);
 		panel.add(cbClasificacion);
 		
@@ -96,13 +98,23 @@ public class JPanelConsultar extends JPanel {
 		
 		try {
 			GestorBBDD gb = new GestorBBDD();
-			
+			modelos = new ArrayList<Modelo>();
+			for (Modelo mo : gb.cargaModelos()) {
+				modelos.add(mo);
+			}
+			System.out.println("Modelo: " + modelos.get(0).getModelo());
+			System.out.println("Consumo: " + modelos.get(0).getConsumo());
+			System.out.println("Emisiones: " + modelos.get(0).getEmisiones());
+			System.out.println("C.Energetica: " + modelos.get(0).getC_energetica());
+			gjt = new GestorJTable(modelos);
+			tTablaConsulta.setModel(gjt);
 			for (Marca m : gb.cargaMarcas()) {
 				cbMarca.addItem(m.getMarca());
+				
 			}
 			
 			for (Eficiencia e : gb.cargaCalificacionEnergetica()) {
-				cbClasificacion.addItem(e.getDescripcion());
+				cbClasificacion.addItem(e.getcEnergetica());
 			}
 			gb.cerrarConexion();
 		} catch (ClassNotFoundException e1) {

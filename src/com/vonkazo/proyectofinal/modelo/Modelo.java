@@ -3,7 +3,7 @@ package com.vonkazo.proyectofinal.modelo;
 public class Modelo {
 	private int id;
 	private int id_marca;
-	private String marca;
+	private String modelo;
 	private float consumo;
 	private float emisiones;
 	private String c_energetica;
@@ -11,7 +11,7 @@ public class Modelo {
 	public Modelo(int id, int id_marca, String marca, float consumo, float emisiones, String c_energetica) {
 		this.id = id;
 		this.id_marca = id_marca;
-		this.marca = marca;
+		this.modelo = marca;
 		this.consumo = consumo;
 		this.emisiones = emisiones;
 		this.c_energetica = c_energetica;
@@ -33,12 +33,12 @@ public class Modelo {
 		this.id_marca = id_marca;
 	}
 
-	public String getMarca() {
-		return marca;
+	public String getModelo() {
+		return modelo;
 	}
 
-	public void setMarca(String marca) {
-		this.marca = marca;
+	public void setModelo(String marca) {
+		this.modelo = marca;
 	}
 
 	public float getConsumo() {
