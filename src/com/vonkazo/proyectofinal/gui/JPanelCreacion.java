@@ -118,9 +118,9 @@ public class JPanelCreacion extends JPanel {
 
 			gb.cerrarConexion();
 		} catch (ClassNotFoundException e1) {
-			System.out.println("Error en carga del driver");
+			JOptionPane.showMessageDialog(null,"Error carga driver");
 		} catch (SQLException e1) {
-			e1.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Error SQL: " + e1.getErrorCode());
 		}
 		
 		JButton btnGuardar = new JButton("Guardar");

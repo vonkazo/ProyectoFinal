@@ -35,7 +35,7 @@ public class GestorJTable extends AbstractTableModel {
 	 */
 	@Override
 	public int getRowCount() {
-		return 100;
+		return modelos.size();
 	}
 	/**
 	 * Metodo para rellenar los datos en cada celda del jtable

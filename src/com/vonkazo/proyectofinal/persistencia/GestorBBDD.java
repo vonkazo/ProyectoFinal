@@ -164,4 +164,91 @@ public class GestorBBDD {
 		}
 		return insertado;
 	}
+	
+	public ArrayList<Modelo> consultaSegunMarca(String marca) throws SQLException {
+		Modelo m;
+		ResultSet rs = null;
+		Statement st = null;
+		ArrayList<Modelo> aLModelos = new ArrayList<Modelo>();
+		//SELECT m.* FROM modelos m, marcas ma WHERE m.ID_MARCA = ma.ID AND ma.MARCA = 'Cadillac';
+		String query = "SELECT m.* "
+				+ "FROM modelos m, marcas ma "
+				+ "WHERE m.ID_MARCA = ma.ID AND ma.MARCA = '"+ marca +"' LIMIT 100";
+		System.out.println(query);
+		st = conexion.createStatement();
+
+		rs = st.executeQuery(query);
+		while (rs.next() == true) {
+			m = new Modelo(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getFloat(4), rs.getFloat(5),
+					rs.getString(6));
+			aLModelos.add(m);
+		}
+
+		rs.close();
+		st.close();
+		return aLModelos;
+	}
+	
+	public ArrayList<Modelo> consultaSegunConsumo(float consumo) throws SQLException {
+		Modelo m;
+		ResultSet rs = null;
+		Statement st = null;
+		ArrayList<Modelo> aLModelos = new ArrayList<Modelo>();
+
+		String query = "SELECT * FROM modelos WHERE ID_MARCA <= "+consumo;
+		st = conexion.createStatement();
+
+		rs = st.executeQuery(query);
+		while (rs.next() == true) {
+			m = new Modelo(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getFloat(4), rs.getFloat(5),
+					rs.getString(6));
+			aLModelos.add(m);
+		}
+
+		rs.close();
+		st.close();
+		return aLModelos;
+	}
+	
+	public ArrayList<Modelo> consultaSegunEmisiones(float emisiones) throws SQLException {
+		Modelo m;
+		ResultSet rs = null;
+		Statement st = null;
+		ArrayList<Modelo> aLModelos = new ArrayList<Modelo>();
+
+		String query = "SELECT * FROM modelos WHERE ID_MARCA <= "+emisiones;
+		st = conexion.createStatement();
+
+		rs = st.executeQuery(query);
+		while (rs.next() == true) {
+			m = new Modelo(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getFloat(4), rs.getFloat(5),
+					rs.getString(6));
+			aLModelos.add(m);
+		}
+
+		rs.close();
+		st.close();
+		return aLModelos;
+	}
+	
+	public ArrayList<Modelo> consultaSegunConsumoEnergia(String c_Energetico) throws SQLException {
+		Modelo m;
+		ResultSet rs = null;
+		Statement st = null;
+		ArrayList<Modelo> aLModelos = new ArrayList<Modelo>();
+
+		String query = "SELECT * FROM modelos WHERE ID_MARCA <= "+c_Energetico;
+		st = conexion.createStatement();
+
+		rs = st.executeQuery(query);
+		while (rs.next() == true) {
+			m = new Modelo(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getFloat(4), rs.getFloat(5),
+					rs.getString(6));
+			aLModelos.add(m);
+		}
+
+		rs.close();
+		st.close();
+		return aLModelos;
+	}
 }
