@@ -16,7 +16,9 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeListener;
 
 import com.vonkazo.proyectofinal.modelo.Eficiencia;
+import com.vonkazo.proyectofinal.modelo.ExceptionNombreIgual;
 import com.vonkazo.proyectofinal.modelo.Marca;
+import com.vonkazo.proyectofinal.modelo.Modelo;
 import com.vonkazo.proyectofinal.persistencia.GestorBBDD;
 
 import javax.swing.event.ChangeEvent;
@@ -95,7 +97,7 @@ public class JPanelCreacion extends JPanel {
 
 		JSlider sEmisiones = new JSlider();
 		sEmisiones.setMajorTickSpacing(5);
-		sEmisiones.setMaximum(1000);
+		sEmisiones.setMaximum(999);
 		sEmisiones.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				lEmisionesContador.setText(String.valueOf(sEmisiones.getValue()));
@@ -129,6 +131,12 @@ public class JPanelCreacion extends JPanel {
 				try {
 					GestorBBDD gb = new GestorBBDD();
 					String eficiencia = cBEficiencia.getSelectedItem().toString();
+					for (Modelo mo : gb.cargaModelos()) {
+						if(mo.getModelo().equalsIgnoreCase(tFModelo.getText())) {
+							throw new ExceptionNombreIgual();
+						}
+						
+					}
 					gb.insertarModelo(cBMarcas.getSelectedIndex()+1, tFModelo.getText(), (float)sConsumo.getValue(), (float)sEmisiones.getValue(), eficiencia);
 					gb.cerrarConexion();
 					JOptionPane.showMessageDialog(null,"Modelo insertado con exito");
@@ -137,6 +145,8 @@ public class JPanelCreacion extends JPanel {
 					JOptionPane.showMessageDialog(null, "Error SQL: " + e.getErrorCode());
 				} catch (ClassNotFoundException e) {
 					JOptionPane.showMessageDialog(null,"Error carga driver");
+				} catch (ExceptionNombreIgual e) {
+					JOptionPane.showMessageDialog(null, "Ese modelo ya existe");
 				}
 			}
 		});

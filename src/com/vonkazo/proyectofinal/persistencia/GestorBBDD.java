@@ -170,7 +170,6 @@ public class GestorBBDD {
 		ResultSet rs = null;
 		Statement st = null;
 		ArrayList<Modelo> aLModelos = new ArrayList<Modelo>();
-		//SELECT m.* FROM modelos m, marcas ma WHERE m.ID_MARCA = ma.ID AND ma.MARCA = 'Cadillac';
 		String query = "SELECT m.* "
 				+ "FROM modelos m, marcas ma "
 				+ "WHERE m.ID_MARCA = ma.ID AND ma.MARCA = '"+ marca +"' LIMIT 100";
@@ -195,7 +194,8 @@ public class GestorBBDD {
 		Statement st = null;
 		ArrayList<Modelo> aLModelos = new ArrayList<Modelo>();
 
-		String query = "SELECT * FROM modelos WHERE ID_MARCA <= "+consumo;
+		String query = "SELECT * FROM modelos WHERE consumo <= "+consumo;
+		System.out.println(query);
 		st = conexion.createStatement();
 
 		rs = st.executeQuery(query);
@@ -216,7 +216,8 @@ public class GestorBBDD {
 		Statement st = null;
 		ArrayList<Modelo> aLModelos = new ArrayList<Modelo>();
 
-		String query = "SELECT * FROM modelos WHERE ID_MARCA <= "+emisiones;
+		String query = "SELECT * FROM modelos WHERE emisiones <= "+emisiones;
+		System.out.println(query);
 		st = conexion.createStatement();
 
 		rs = st.executeQuery(query);
@@ -237,7 +238,7 @@ public class GestorBBDD {
 		Statement st = null;
 		ArrayList<Modelo> aLModelos = new ArrayList<Modelo>();
 
-		String query = "SELECT * FROM modelos WHERE ID_MARCA <= "+c_Energetico;
+		String query = "SELECT * FROM modelos WHERE c_energetica = '"+c_Energetico+"'";
 		st = conexion.createStatement();
 
 		rs = st.executeQuery(query);

@@ -7,6 +7,8 @@ import java.util.ArrayList;
 
 import javax.swing.JToolBar;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import com.vonkazo.proyectofinal.modelo.Eficiencia;
 import com.vonkazo.proyectofinal.modelo.Marca;
@@ -25,6 +27,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
 
 public class JPanelConsultar extends JPanel {
 	private JTable tTablaConsulta;
@@ -73,18 +76,36 @@ public class JPanelConsultar extends JPanel {
 		cbClasificacion.setBounds(196, 125, 200, 20);
 		panel.add(cbClasificacion);
 
+		JLabel lblConsumo = new JLabel("0");
+		lblConsumo.setBounds(454, 55, 46, 14);
+		panel.add(lblConsumo);
+
+		JLabel lblEmisionesMax = new JLabel("0");
+		lblEmisionesMax.setBounds(454, 92, 46, 14);
+		panel.add(lblEmisionesMax);
+
 		JSlider slConsumo = new JSlider();
 		slConsumo.setValue(0);
 		slConsumo.setMaximum(205);
 		slConsumo.setMinorTickSpacing(1);
 		slConsumo.setMajorTickSpacing(5);
+		slConsumo.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				lblConsumo.setText(String.valueOf(slConsumo.getValue()));
+			}
+		});
 		slConsumo.setBounds(192, 51, 200, 26);
 		panel.add(slConsumo);
 
 		JSlider slEmisiones = new JSlider();
 		slEmisiones.setValue(0);
-		slEmisiones.setMinorTickSpacing(1);
 		slEmisiones.setMajorTickSpacing(5);
+		slEmisiones.setMaximum(1000);
+		slEmisiones.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				lblEmisionesMax.setText(String.valueOf(slEmisiones.getValue()));
+			}
+		});
 		slEmisiones.setBounds(192, 88, 200, 26);
 		panel.add(slEmisiones);
 
@@ -95,12 +116,14 @@ public class JPanelConsultar extends JPanel {
 		tTablaConsulta = new JTable();
 		sPContenedorTabla.setViewportView(tTablaConsulta);
 		tTablaConsulta.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
 		// Realizamos un try para la conexion con la base de datos
 		try {
 			GestorBBDD gb = new GestorBBDD();
 			// Realizamos la vista de la tabla y le pasamos el array
 			gjt = new GestorJTable(gb.cargaModelos());
 			tTablaConsulta.setModel(gjt);
+
 			// Rellenamos los combobox de la vista
 			for (Marca m : gb.cargaMarcas()) {
 				cbMarca.addItem(m.getMarca());
@@ -131,11 +154,18 @@ public class JPanelConsultar extends JPanel {
 						gjt = new GestorJTable(gb.consultaSegunMarca(cbMarca.getSelectedItem().toString()));
 						tTablaConsulta.setModel(gjt);
 					} else if (radios.getSelection() == radioConsumo.getModel()) {
-						gjt = new GestorJTable(gb.consultaSegunConsumo((float)slConsumo.getValue()));
+						// Segun jslider de consumo
+						gjt = new GestorJTable(gb.consultaSegunConsumo((float) slConsumo.getValue()));
 						tTablaConsulta.setModel(gjt);
-						System.out.println("consumos <= " + (float)(float)slConsumo.getValue());
-					}
-
+					} else if (radios.getSelection() == rdbtnEmisionesMaximas.getModel()) {
+						// Segun slider de emisiones
+						gjt = new GestorJTable(gb.consultaSegunEmisiones((float) slEmisiones.getValue()));
+						tTablaConsulta.setModel(gjt);
+					} else if (radios.getSelection() == rdbtnClasificacion.getModel()) {
+						// Segun slider de emisiones
+						gjt = new GestorJTable(gb.consultaSegunConsumoEnergia(cbClasificacion.getSelectedItem().toString()));
+						tTablaConsulta.setModel(gjt);
+					}	
 					gb.cerrarConexion();
 				} catch (ClassNotFoundException e1) {
 					JOptionPane.showMessageDialog(null, "Error carga driver");
