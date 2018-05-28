@@ -119,7 +119,7 @@ public class GestorBBDD {
 		Statement st = null;
 		ArrayList<Modelo> aLModelos = new ArrayList<Modelo>();
 
-		String query = "SELECT DISTINCT * FROM modelos";
+		String query = "SELECT * FROM modelos";
 		st = conexion.createStatement();
 
 		rs = st.executeQuery(query);
@@ -164,7 +164,13 @@ public class GestorBBDD {
 		}
 		return insertado;
 	}
-	
+	/**
+	 * Metodo que devuelve un arraylist con el modelo para actualizar el jtable
+	 * de la vista en funcion a la marca que elige el usuario
+	 * @param marca
+	 * @return arraylist de modelo
+	 * @throws SQLException
+	 */
 	public ArrayList<Modelo> consultaSegunMarca(String marca) throws SQLException {
 		Modelo m;
 		ResultSet rs = null;
@@ -187,7 +193,13 @@ public class GestorBBDD {
 		st.close();
 		return aLModelos;
 	}
-	
+	/**
+	 * Metodo que devuelve un arraylist con el modelo para actualizar el jtable
+	 * de la vista en funcion al consumo que elige el usuario
+	 * @param consumo
+	 * @return arraylist de modelo
+	 * @throws SQLException
+	 */
 	public ArrayList<Modelo> consultaSegunConsumo(float consumo) throws SQLException {
 		Modelo m;
 		ResultSet rs = null;
@@ -210,6 +222,13 @@ public class GestorBBDD {
 		return aLModelos;
 	}
 	
+	/**
+	 * Metodo que devuelve un arraylist con el modelo para actualizar el jtable
+	 * de la vista en funcion al emisiones que elige el usuario
+	 * @param emisiones
+	 * @return arraylist de modelo
+	 * @throws SQLException
+	 */
 	public ArrayList<Modelo> consultaSegunEmisiones(float emisiones) throws SQLException {
 		Modelo m;
 		ResultSet rs = null;
@@ -232,6 +251,13 @@ public class GestorBBDD {
 		return aLModelos;
 	}
 	
+	/**
+	 * Metodo que devuelve un arraylist con el modelo para actualizar el jtable
+	 * de la vista en funcion al consumo de energia que elige el usuario
+	 * @param c_Energetico
+	 * @return arraylist de modelo
+	 * @throws SQLException
+	 */
 	public ArrayList<Modelo> consultaSegunConsumoEnergia(String c_Energetico) throws SQLException {
 		Modelo m;
 		ResultSet rs = null;
@@ -251,5 +277,20 @@ public class GestorBBDD {
 		rs.close();
 		st.close();
 		return aLModelos;
+	}
+	
+	public boolean borrarTupla(int id)
+			throws SQLException {
+
+		boolean insertado = false;
+		String sql = "DELETE FROM modelos WHERE ID=?";
+		PreparedStatement ps = conexion.prepareStatement(sql);
+		ps.setInt(1, id);
+		int numRegistrosBorrados = ps.executeUpdate();
+		conexion.setAutoCommit(true);
+		if (numRegistrosBorrados == 1) {
+			insertado = true;
+		}
+		return insertado;
 	}
 }

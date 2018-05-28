@@ -121,7 +121,8 @@ public class JPanelConsultar extends JPanel {
 		try {
 			GestorBBDD gb = new GestorBBDD();
 			// Realizamos la vista de la tabla y le pasamos el array
-			gjt = new GestorJTable(gb.cargaModelos());
+			modelos = gb.cargaModelos();
+			gjt = new GestorJTable(modelos);
 			tTablaConsulta.setModel(gjt);
 
 			// Rellenamos los combobox de la vista
@@ -151,21 +152,25 @@ public class JPanelConsultar extends JPanel {
 				try {
 					GestorBBDD gb = new GestorBBDD();
 					if (radios.getSelection() == rdbtnMarca.getModel()) {
-						gjt = new GestorJTable(gb.consultaSegunMarca(cbMarca.getSelectedItem().toString()));
+						modelos = gb.consultaSegunMarca(cbMarca.getSelectedItem().toString());
+						gjt = new GestorJTable(modelos);
 						tTablaConsulta.setModel(gjt);
 					} else if (radios.getSelection() == radioConsumo.getModel()) {
 						// Segun jslider de consumo
-						gjt = new GestorJTable(gb.consultaSegunConsumo((float) slConsumo.getValue()));
+						modelos = gb.consultaSegunConsumo((float) slConsumo.getValue());
+						gjt = new GestorJTable(modelos);
 						tTablaConsulta.setModel(gjt);
 					} else if (radios.getSelection() == rdbtnEmisionesMaximas.getModel()) {
 						// Segun slider de emisiones
-						gjt = new GestorJTable(gb.consultaSegunEmisiones((float) slEmisiones.getValue()));
+						modelos = gb.consultaSegunEmisiones((float) slEmisiones.getValue());
+						gjt = new GestorJTable(modelos);
 						tTablaConsulta.setModel(gjt);
 					} else if (radios.getSelection() == rdbtnClasificacion.getModel()) {
 						// Segun slider de emisiones
-						gjt = new GestorJTable(gb.consultaSegunConsumoEnergia(cbClasificacion.getSelectedItem().toString()));
+						gjt = new GestorJTable(
+								gb.consultaSegunConsumoEnergia(cbClasificacion.getSelectedItem().toString()));
 						tTablaConsulta.setModel(gjt);
-					}	
+					}
 					gb.cerrarConexion();
 				} catch (ClassNotFoundException e1) {
 					JOptionPane.showMessageDialog(null, "Error carga driver");
@@ -189,7 +194,28 @@ public class JPanelConsultar extends JPanel {
 		JButton btnEliminar = new JButton("Eliminiar");
 		btnEliminar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Eliminar
+				int i = tTablaConsulta.getSelectedRow();
+				if (getConfirmacion()) {
+					try {
+						GestorBBDD gb = new GestorBBDD();
+						for (int j = 0; j < modelos.size(); j++) {
+							if (j == i) {
+								if (gb.borrarTupla(modelos.get(j).getId())) {
+									JOptionPane.showMessageDialog(null, "Borrado realizado");
+								} else {
+									JOptionPane.showMessageDialog(null, "El borrado no se ha realizado");
+								}
+							}
+						}
+
+						gb.cerrarConexion();
+					} catch (ClassNotFoundException e1) {
+						JOptionPane.showMessageDialog(null, "Error carga driver");
+					} catch (SQLException e1) {
+						JOptionPane.showMessageDialog(null, "Error SQL: " + e1.getErrorCode());
+					}
+
+				}
 			}
 		});
 		btnEliminar.setIcon(null);
@@ -203,5 +229,13 @@ public class JPanelConsultar extends JPanel {
 		});
 		btnExportar.setIcon(null);
 		toolBar.add(btnExportar);
+	}
+
+	public boolean getConfirmacion() {
+		int respuesta = JOptionPane.showConfirmDialog(this, "¿Desea borrar?", "Gestructor", JOptionPane.YES_NO_OPTION);
+		if (respuesta == JOptionPane.OK_OPTION) {
+			return true;
+		}
+		return false;
 	}
 }
