@@ -12,6 +12,8 @@ import com.vonkazo.proyectofinal.util.GestorJTable;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+
 import java.awt.CardLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -59,6 +61,11 @@ public class jFramePrincipal extends JFrame {
 		menuBar.add(mnArchivo);
 
 		JMenuItem mntmSalir = new JMenuItem("Salir");
+		mntmSalir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit( 0 );
+			}
+		});
 		mnArchivo.add(mntmSalir);
 
 		JMenu mnModelos = new JMenu("Modelos");
@@ -83,10 +90,12 @@ public class jFramePrincipal extends JFrame {
 		JMenu mnAyuda = new JMenu("Ayuda");
 		menuBar.add(mnAyuda);
 
-		JMenuItem mntmAyuda = new JMenuItem("Ayuda");
-		mnAyuda.add(mntmAyuda);
-
 		JMenuItem mntmAcercaDe = new JMenuItem("Acerca de");
+		mntmAcercaDe.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				JOptionPane.showMessageDialog(null, "Programa realizado por Alejandro Balbona");
+			}
+		});
 		mnAyuda.add(mntmAcercaDe);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -96,11 +105,9 @@ public class jFramePrincipal extends JFrame {
 		consulta = new JPanelConsultar();
 		editar = new JPanelEditar();
 		contentPane.setLayout(new CardLayout(0, 0));
-
 		contentPane.add(consulta, "PanelConsulta");
 		contentPane.add(creacion, "PanelCreacion");
 		contentPane.add(editar, "PanelEditar");
-		
 	}
 
 	public void cambiarPantalla(String nombre) {

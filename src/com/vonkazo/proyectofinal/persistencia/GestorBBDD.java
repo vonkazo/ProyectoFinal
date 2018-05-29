@@ -195,7 +195,6 @@ public class GestorBBDD {
 		ArrayList<Modelo> aLModelos = new ArrayList<Modelo>();
 		String query = "SELECT m.* " + "FROM modelos m, marcas ma " + "WHERE m.ID_MARCA = ma.ID AND ma.MARCA = '"
 				+ marca + "' LIMIT 100";
-		System.out.println(query);
 		st = conexion.createStatement();
 
 		rs = st.executeQuery(query);
@@ -225,7 +224,6 @@ public class GestorBBDD {
 		ArrayList<Modelo> aLModelos = new ArrayList<Modelo>();
 
 		String query = "SELECT * FROM modelos WHERE consumo <= " + consumo;
-		System.out.println(query);
 		st = conexion.createStatement();
 
 		rs = st.executeQuery(query);
@@ -255,7 +253,6 @@ public class GestorBBDD {
 		ArrayList<Modelo> aLModelos = new ArrayList<Modelo>();
 
 		String query = "SELECT * FROM modelos WHERE emisiones <= " + emisiones;
-		System.out.println(query);
 		st = conexion.createStatement();
 
 		rs = st.executeQuery(query);
@@ -298,7 +295,12 @@ public class GestorBBDD {
 		st.close();
 		return aLModelos;
 	}
-
+	/**
+	 * Metodo que borra el modelo seleccionado en la tabla tomando de referencia su id
+	 * @param id
+	 * @return
+	 * @throws SQLException
+	 */
 	public boolean borrarTupla(int id) throws SQLException {
 
 		boolean insertado = false;
@@ -312,6 +314,18 @@ public class GestorBBDD {
 		}
 		return insertado;
 	}
+	
+	/**
+	 * Metodo para realizar la actualizacion de datos de un modelo.
+	 * @param marca
+	 * @param modelo
+	 * @param consumo
+	 * @param emisiones
+	 * @param c_energetica
+	 * @param id
+	 * @return insertado
+	 * @throws SQLException
+	 */
 	public boolean editarTupla(String marca, String modelo, float consumo, float emisiones, String c_energetica, int id) throws SQLException {
 
 		boolean insertado = false;

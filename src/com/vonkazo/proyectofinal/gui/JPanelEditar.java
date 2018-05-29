@@ -27,7 +27,8 @@ public class JPanelEditar extends JPanel {
 	private JTextField tFModelo;
 
 	/**
-	 * Create the panel.
+	 * Jpanel para la edicion de datos de un modelo que recoge segun la tupla seleccionada
+	 * en la vista
 	 */
 	public JPanelEditar() {
 		setLayout(new BorderLayout(0, 0));

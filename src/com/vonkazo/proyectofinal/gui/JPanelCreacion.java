@@ -30,7 +30,9 @@ public class JPanelCreacion extends JPanel {
 	private JTextField tFModelo;
 
 	/**
-	 * Create the panel.
+	 * JPanel que utilizamos para realizar creacion de un modelo mediante varios jslider y combox
+	 * Realiza un insert en una base de datos
+	 * Solo inserta si hay conexion con la bbdd y si el nombre es correcto o no esta repetido
 	 */
 	public JPanelCreacion() {
 		setLayout(new BorderLayout(0, 0));

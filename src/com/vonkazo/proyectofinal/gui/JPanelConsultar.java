@@ -196,7 +196,7 @@ public class JPanelConsultar extends JPanel {
 		btnEditar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Editar
-				
+				//((CardLayout) jFramePrincipal.getFrames()[0].getLayout()).show(jFramePrincipal.getFrames()[0], "PanelEditar");
 			}
 		});
 		btnEditar.setIcon(null);
