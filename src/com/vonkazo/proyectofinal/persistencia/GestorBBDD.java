@@ -11,9 +11,11 @@ import java.sql.PreparedStatement;
 import com.vonkazo.proyectofinal.modelo.Eficiencia;
 import com.vonkazo.proyectofinal.modelo.Marca;
 import com.vonkazo.proyectofinal.modelo.Modelo;
+
 /**
- * Clase que gestiona la conexion con la BBDD
- * Carga el driver y la conexion por las constantes que tiene
+ * Clase que gestiona la conexion con la BBDD Carga el driver y la conexion por
+ * las constantes que tiene
+ * 
  * @author Vonkazo
  *
  */
@@ -23,24 +25,33 @@ public class GestorBBDD {
 	private final static String USER = "dam2018";
 	private final static String PASSWORD = "dam2018";
 	private Connection conexion;
+
 	/**
 	 * Constructor donde cargamos el driver y la conexion de la bbdd
-	 * @throws ClassNotFoundException si no carga el driver
-	 * @throws SQLException si devuelve un fallo la conexion
+	 * 
+	 * @throws ClassNotFoundException
+	 *             si no carga el driver
+	 * @throws SQLException
+	 *             si devuelve un fallo la conexion
 	 */
 	public GestorBBDD() throws ClassNotFoundException, SQLException {
 		Class.forName(DRIVER);
 		cargarConexion();
 	}
+
 	/**
 	 * Metodo para cargar la conexion
-	 * @throws SQLException arroja una excepcion si hay algun fallo al cargar conexion
+	 * 
+	 * @throws SQLException
+	 *             arroja una excepcion si hay algun fallo al cargar conexion
 	 */
 	private void cargarConexion() throws SQLException {
 		conexion = DriverManager.getConnection(BBDD, USER, PASSWORD);
 	}
+
 	/**
 	 * Metodo para cerra conexion
+	 * 
 	 * @throws SQLException
 	 */
 	public void cerrarConexion() throws SQLException {
@@ -58,6 +69,7 @@ public class GestorBBDD {
 	/**
 	 * Metodo que devuelve un arraylist y que utilizamos en la vista para obtener en
 	 * el combobox las marcas
+	 * 
 	 * @return un arraylist de Marca con todas las marcas
 	 * @throws SQLException
 	 */
@@ -84,6 +96,7 @@ public class GestorBBDD {
 	/**
 	 * Metodo que devuelve un arraylist y que utilizamos en la vista para obtener en
 	 * el combobox la calificacion energetica
+	 * 
 	 * @return un arraylist de Eficienci con todas las Calificaciones energeticas
 	 * @throws SQLException
 	 */
@@ -110,6 +123,7 @@ public class GestorBBDD {
 	/**
 	 * Metodo que devuelve un arraylist y que utilizamos en la vista para obtener en
 	 * el combobox los modelos
+	 * 
 	 * @return un arraylist de Modelo con todas los modelos
 	 * @throws SQLException
 	 */
@@ -137,6 +151,7 @@ public class GestorBBDD {
 	/**
 	 * Metodo con el que insertamos una tupla en la tabla modelos y ademas
 	 * devolvemos un boolean dependiendo de si se ha insertado bien o no
+	 * 
 	 * @param id_marca
 	 * @param modelo
 	 * @param consumo
@@ -164,9 +179,11 @@ public class GestorBBDD {
 		}
 		return insertado;
 	}
+
 	/**
-	 * Metodo que devuelve un arraylist con el modelo para actualizar el jtable
-	 * de la vista en funcion a la marca que elige el usuario
+	 * Metodo que devuelve un arraylist con el modelo para actualizar el jtable de
+	 * la vista en funcion a la marca que elige el usuario
+	 * 
 	 * @param marca
 	 * @return arraylist de modelo
 	 * @throws SQLException
@@ -176,9 +193,8 @@ public class GestorBBDD {
 		ResultSet rs = null;
 		Statement st = null;
 		ArrayList<Modelo> aLModelos = new ArrayList<Modelo>();
-		String query = "SELECT m.* "
-				+ "FROM modelos m, marcas ma "
-				+ "WHERE m.ID_MARCA = ma.ID AND ma.MARCA = '"+ marca +"' LIMIT 100";
+		String query = "SELECT m.* " + "FROM modelos m, marcas ma " + "WHERE m.ID_MARCA = ma.ID AND ma.MARCA = '"
+				+ marca + "' LIMIT 100";
 		System.out.println(query);
 		st = conexion.createStatement();
 
@@ -193,9 +209,11 @@ public class GestorBBDD {
 		st.close();
 		return aLModelos;
 	}
+
 	/**
-	 * Metodo que devuelve un arraylist con el modelo para actualizar el jtable
-	 * de la vista en funcion al consumo que elige el usuario
+	 * Metodo que devuelve un arraylist con el modelo para actualizar el jtable de
+	 * la vista en funcion al consumo que elige el usuario
+	 * 
 	 * @param consumo
 	 * @return arraylist de modelo
 	 * @throws SQLException
@@ -206,7 +224,7 @@ public class GestorBBDD {
 		Statement st = null;
 		ArrayList<Modelo> aLModelos = new ArrayList<Modelo>();
 
-		String query = "SELECT * FROM modelos WHERE consumo <= "+consumo;
+		String query = "SELECT * FROM modelos WHERE consumo <= " + consumo;
 		System.out.println(query);
 		st = conexion.createStatement();
 
@@ -221,10 +239,11 @@ public class GestorBBDD {
 		st.close();
 		return aLModelos;
 	}
-	
+
 	/**
-	 * Metodo que devuelve un arraylist con el modelo para actualizar el jtable
-	 * de la vista en funcion al emisiones que elige el usuario
+	 * Metodo que devuelve un arraylist con el modelo para actualizar el jtable de
+	 * la vista en funcion al emisiones que elige el usuario
+	 * 
 	 * @param emisiones
 	 * @return arraylist de modelo
 	 * @throws SQLException
@@ -235,7 +254,7 @@ public class GestorBBDD {
 		Statement st = null;
 		ArrayList<Modelo> aLModelos = new ArrayList<Modelo>();
 
-		String query = "SELECT * FROM modelos WHERE emisiones <= "+emisiones;
+		String query = "SELECT * FROM modelos WHERE emisiones <= " + emisiones;
 		System.out.println(query);
 		st = conexion.createStatement();
 
@@ -250,10 +269,11 @@ public class GestorBBDD {
 		st.close();
 		return aLModelos;
 	}
-	
+
 	/**
-	 * Metodo que devuelve un arraylist con el modelo para actualizar el jtable
-	 * de la vista en funcion al consumo de energia que elige el usuario
+	 * Metodo que devuelve un arraylist con el modelo para actualizar el jtable de
+	 * la vista en funcion al consumo de energia que elige el usuario
+	 * 
 	 * @param c_Energetico
 	 * @return arraylist de modelo
 	 * @throws SQLException
@@ -264,7 +284,7 @@ public class GestorBBDD {
 		Statement st = null;
 		ArrayList<Modelo> aLModelos = new ArrayList<Modelo>();
 
-		String query = "SELECT * FROM modelos WHERE c_energetica = '"+c_Energetico+"'";
+		String query = "SELECT * FROM modelos WHERE c_energetica = '" + c_Energetico + "'";
 		st = conexion.createStatement();
 
 		rs = st.executeQuery(query);
@@ -278,9 +298,8 @@ public class GestorBBDD {
 		st.close();
 		return aLModelos;
 	}
-	
-	public boolean borrarTupla(int id)
-			throws SQLException {
+
+	public boolean borrarTupla(int id) throws SQLException {
 
 		boolean insertado = false;
 		String sql = "DELETE FROM modelos WHERE ID=?";
@@ -289,6 +308,24 @@ public class GestorBBDD {
 		int numRegistrosBorrados = ps.executeUpdate();
 		conexion.setAutoCommit(true);
 		if (numRegistrosBorrados == 1) {
+			insertado = true;
+		}
+		return insertado;
+	}
+	public boolean editarTupla(String marca, String modelo, float consumo, float emisiones, String c_energetica, int id) throws SQLException {
+
+		boolean insertado = false;
+		String sql = "UPDATE modelos SET ID_MARCA=?, MODELO=?, CONSUMO=?, EMISIONES=?, C_ENERGETICA=? WHERE ID=?";
+		PreparedStatement ps = conexion.prepareStatement(sql);
+		ps.setString(1, marca);
+		ps.setString(2, modelo);
+		ps.setFloat(3, consumo);
+		ps.setFloat(4, emisiones);
+		ps.setString(5, c_energetica);
+		ps.setInt(6, id);
+		int numRegistrosActualizados = ps.executeUpdate();
+		conexion.setAutoCommit(true);
+		if (numRegistrosActualizados == 1) {
 			insertado = true;
 		}
 		return insertado;

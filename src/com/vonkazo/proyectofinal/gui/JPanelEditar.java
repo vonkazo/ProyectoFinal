@@ -16,23 +16,20 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeListener;
 
 import com.vonkazo.proyectofinal.modelo.Eficiencia;
-import com.vonkazo.proyectofinal.modelo.ExceptionNombreIgual;
-import com.vonkazo.proyectofinal.modelo.ExceptionNombreVacio;
 import com.vonkazo.proyectofinal.modelo.Marca;
-import com.vonkazo.proyectofinal.modelo.Modelo;
 import com.vonkazo.proyectofinal.persistencia.GestorBBDD;
 
 import javax.swing.event.ChangeEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class JPanelCreacion extends JPanel {
+public class JPanelEditar extends JPanel {
 	private JTextField tFModelo;
 
 	/**
 	 * Create the panel.
 	 */
-	public JPanelCreacion() {
+	public JPanelEditar() {
 		setLayout(new BorderLayout(0, 0));
 
 		JToolBar toolBar = new JToolBar();
@@ -121,49 +118,18 @@ public class JPanelCreacion extends JPanel {
 
 			gb.cerrarConexion();
 		} catch (ClassNotFoundException e1) {
-			JOptionPane.showMessageDialog(null,"Error carga driver");
+			JOptionPane.showMessageDialog(null, "Error carga driver");
 		} catch (SQLException e1) {
-			if(e1.getErrorCode()==0) {
+			if (e1.getErrorCode() == 0) {
 				JOptionPane.showMessageDialog(null, "Fallo en la conexion con el servidor");
-			}else {
-				JOptionPane.showMessageDialog(null, "Error SQL: " + e1.getErrorCode() + " (Consultalo con un administrador)");
+			} else {
+				JOptionPane.showMessageDialog(null,
+						"Error SQL: " + e1.getErrorCode() + " (Consultalo con un administrador)");
 			}
-			
+
 		}
-		
+
 		JButton btnGuardar = new JButton("Guardar");
-		btnGuardar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				try {
-					GestorBBDD gb = new GestorBBDD();
-					String eficiencia = cBEficiencia.getSelectedItem().toString();
-					for (Modelo mo : gb.cargaModelos()) {
-						if(mo.getModelo().equalsIgnoreCase(tFModelo.getText())) {
-							throw new ExceptionNombreIgual();
-						}else if(tFModelo.getText().trim().length()==0) {
-							throw new ExceptionNombreVacio();
-						}
-						
-					}
-					gb.insertarModelo(cBMarcas.getSelectedIndex()+1, tFModelo.getText(), (float)sConsumo.getValue(), (float)sEmisiones.getValue(), eficiencia);
-					gb.cerrarConexion();
-					JOptionPane.showMessageDialog(null,"Modelo insertado con exito");
-					
-				} catch (SQLException e) {
-					if(e.getErrorCode()==0) {
-						JOptionPane.showMessageDialog(null, "Fallo en la conexion con el servidor");
-					}else {
-						JOptionPane.showMessageDialog(null, "Error SQL: " + e.getErrorCode() + " (Consultalo con un administrador)");
-					}
-				} catch (ClassNotFoundException e) {
-					JOptionPane.showMessageDialog(null,"Error carga driver");
-				} catch (ExceptionNombreIgual e) {
-					JOptionPane.showMessageDialog(null, "Ese modelo ya existe");
-				}  catch (ExceptionNombreVacio e) {
-					JOptionPane.showMessageDialog(null, "El modelo esta vacio");
-				}
-			}
-		});
 		toolBar.add(btnGuardar);
 
 	}

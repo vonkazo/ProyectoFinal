@@ -2,6 +2,7 @@ package com.vonkazo.proyectofinal.gui;
 
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -21,6 +22,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JRadioButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JSlider;
 import javax.swing.JScrollPane;
@@ -137,9 +139,13 @@ public class JPanelConsultar extends JPanel {
 			// Cerramos conexion
 			gb.cerrarConexion();
 		} catch (ClassNotFoundException e1) {
-			System.out.println("Error en carga del driver");
+			JOptionPane.showMessageDialog(null, "Error en carga del driver");
 		} catch (SQLException e1) {
-			e1.printStackTrace();
+			if(e1.getErrorCode()==0) {
+				JOptionPane.showMessageDialog(null, "Fallo en la conexion con el servidor");
+			}else {
+				JOptionPane.showMessageDialog(null, "Error SQL: " + e1.getErrorCode() + " (Consultalo con un administrador)");
+			}
 		}
 
 		JToolBar toolBar = new JToolBar();
@@ -175,7 +181,11 @@ public class JPanelConsultar extends JPanel {
 				} catch (ClassNotFoundException e1) {
 					JOptionPane.showMessageDialog(null, "Error carga driver");
 				} catch (SQLException e1) {
-					JOptionPane.showMessageDialog(null, "Error SQL: " + e1.getErrorCode());
+					if(e1.getErrorCode()==0) {
+						JOptionPane.showMessageDialog(null, "Fallo en la conexion con el servidor");
+					}else {
+						JOptionPane.showMessageDialog(null, "Error SQL: " + e1.getErrorCode() + " (Consultalo con un administrador)");
+					}
 				}
 			}
 		});
@@ -186,6 +196,7 @@ public class JPanelConsultar extends JPanel {
 		btnEditar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Editar
+				
 			}
 		});
 		btnEditar.setIcon(null);
@@ -201,6 +212,9 @@ public class JPanelConsultar extends JPanel {
 						for (int j = 0; j < modelos.size(); j++) {
 							if (j == i) {
 								if (gb.borrarTupla(modelos.get(j).getId())) {
+									modelos.remove(j);
+									gjt = new GestorJTable(modelos);
+									tTablaConsulta.setModel(gjt);
 									JOptionPane.showMessageDialog(null, "Borrado realizado");
 								} else {
 									JOptionPane.showMessageDialog(null, "El borrado no se ha realizado");
@@ -212,7 +226,11 @@ public class JPanelConsultar extends JPanel {
 					} catch (ClassNotFoundException e1) {
 						JOptionPane.showMessageDialog(null, "Error carga driver");
 					} catch (SQLException e1) {
-						JOptionPane.showMessageDialog(null, "Error SQL: " + e1.getErrorCode());
+						if(e1.getErrorCode()==0) {
+							JOptionPane.showMessageDialog(null, "Fallo en la conexion con el servidor");
+						}else {
+							JOptionPane.showMessageDialog(null, "Error SQL: " + e1.getErrorCode() + " (Consultalo con un administrador)");
+						}
 					}
 
 				}
@@ -230,7 +248,10 @@ public class JPanelConsultar extends JPanel {
 		btnExportar.setIcon(null);
 		toolBar.add(btnExportar);
 	}
-
+	/**
+	 * Metodo que utilizamos para la confirmacion del borrado de tuplas en la tabla
+	 * @return
+	 */
 	public boolean getConfirmacion() {
 		int respuesta = JOptionPane.showConfirmDialog(this, "¿Desea borrar?", "Gestructor", JOptionPane.YES_NO_OPTION);
 		if (respuesta == JOptionPane.OK_OPTION) {
@@ -238,4 +259,5 @@ public class JPanelConsultar extends JPanel {
 		}
 		return false;
 	}
+	
 }
