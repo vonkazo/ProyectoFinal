@@ -3,6 +3,7 @@ package com.vonkazo.proyectofinal.gui;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Frame;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -30,17 +31,24 @@ import javax.swing.JTable;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
-
+/**
+ * Jpanel principal del jframe en el que mostramos las tuplas en un jtable
+ * @author Vonkazo
+ *
+ */
 public class JPanelConsultar extends JPanel {
+	private JFramePrincipal jfp;
 	private JTable tTablaConsulta;
 	private GestorJTable gjt;
-	ArrayList<Modelo> modelos;
+	private ArrayList<Modelo> modelos;
+	
 
 	/**
 	 * En este panel se mostrara una jtable con 100 tuplas en la que podremos
 	 * filtrar por diferente datos
 	 */
-	public JPanelConsultar() {
+	public JPanelConsultar(JFramePrincipal jfprincipal) {
+		jfp = jfprincipal;
 		setLayout(new BorderLayout(0, 0));
 
 		JPanel panel = new JPanel();
@@ -141,10 +149,11 @@ public class JPanelConsultar extends JPanel {
 		} catch (ClassNotFoundException e1) {
 			JOptionPane.showMessageDialog(null, "Error en carga del driver");
 		} catch (SQLException e1) {
-			if(e1.getErrorCode()==0) {
+			if (e1.getErrorCode() == 0) {
 				JOptionPane.showMessageDialog(null, "Fallo en la conexion con el servidor");
-			}else {
-				JOptionPane.showMessageDialog(null, "Error SQL: " + e1.getErrorCode() + " (Consultalo con un administrador)");
+			} else {
+				JOptionPane.showMessageDialog(null,
+						"Error SQL: " + e1.getErrorCode() + " (Consultalo con un administrador)");
 			}
 		}
 
@@ -173,6 +182,7 @@ public class JPanelConsultar extends JPanel {
 						tTablaConsulta.setModel(gjt);
 					} else if (radios.getSelection() == rdbtnClasificacion.getModel()) {
 						// Segun slider de emisiones
+						modelos = gb.consultaSegunConsumoEnergia(cbClasificacion.getSelectedItem().toString());
 						gjt = new GestorJTable(
 								gb.consultaSegunConsumoEnergia(cbClasificacion.getSelectedItem().toString()));
 						tTablaConsulta.setModel(gjt);
@@ -181,10 +191,11 @@ public class JPanelConsultar extends JPanel {
 				} catch (ClassNotFoundException e1) {
 					JOptionPane.showMessageDialog(null, "Error carga driver");
 				} catch (SQLException e1) {
-					if(e1.getErrorCode()==0) {
+					if (e1.getErrorCode() == 0) {
 						JOptionPane.showMessageDialog(null, "Fallo en la conexion con el servidor");
-					}else {
-						JOptionPane.showMessageDialog(null, "Error SQL: " + e1.getErrorCode() + " (Consultalo con un administrador)");
+					} else {
+						JOptionPane.showMessageDialog(null,
+								"Error SQL: " + e1.getErrorCode() + " (Consultalo con un administrador)");
 					}
 				}
 			}
@@ -196,7 +207,28 @@ public class JPanelConsultar extends JPanel {
 		btnEditar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Editar
-				//((CardLayout) jFramePrincipal.getFrames()[0].getLayout()).show(jFramePrincipal.getFrames()[0], "PanelEditar");
+				int i = tTablaConsulta.getSelectedRow();
+				try {
+					GestorBBDD gb = new GestorBBDD();
+					for (int j = 0; j < modelos.size(); j++) {
+						if (j == i) {
+							jfp.cambiarPantalla("PanelEditar",modelos.get(j));
+							break;
+						}
+					}
+
+					gb.cerrarConexion();
+				} catch (ClassNotFoundException e1) {
+					JOptionPane.showMessageDialog(null, "Error carga driver");
+				} catch (SQLException e1) {
+					if (e1.getErrorCode() == 0) {
+						JOptionPane.showMessageDialog(null, "Fallo en la conexion con el servidor");
+					} else {
+						JOptionPane.showMessageDialog(null,
+								"Error SQL: " + e1.getErrorCode() + " (Consultalo con un administrador)");
+					}
+				}
+
 			}
 		});
 		btnEditar.setIcon(null);
@@ -205,7 +237,10 @@ public class JPanelConsultar extends JPanel {
 		JButton btnEliminar = new JButton("Eliminiar");
 		btnEliminar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				//Recogemos el id de la tabla de la tupla seleccionada
 				int i = tTablaConsulta.getSelectedRow();
+				// Si devuelve true recorre el array y compara ids hasta encontrar el modelo en la bbdd
+				// Lo borra y acto seguido lo borra del array y vuelve a volcar el modelo en la jtable
 				if (getConfirmacion()) {
 					try {
 						GestorBBDD gb = new GestorBBDD();
@@ -226,10 +261,11 @@ public class JPanelConsultar extends JPanel {
 					} catch (ClassNotFoundException e1) {
 						JOptionPane.showMessageDialog(null, "Error carga driver");
 					} catch (SQLException e1) {
-						if(e1.getErrorCode()==0) {
+						if (e1.getErrorCode() == 0) {
 							JOptionPane.showMessageDialog(null, "Fallo en la conexion con el servidor");
-						}else {
-							JOptionPane.showMessageDialog(null, "Error SQL: " + e1.getErrorCode() + " (Consultalo con un administrador)");
+						} else {
+							JOptionPane.showMessageDialog(null,
+									"Error SQL: " + e1.getErrorCode() + " (Consultalo con un administrador)");
 						}
 					}
 
@@ -248,8 +284,10 @@ public class JPanelConsultar extends JPanel {
 		btnExportar.setIcon(null);
 		toolBar.add(btnExportar);
 	}
+
 	/**
 	 * Metodo que utilizamos para la confirmacion del borrado de tuplas en la tabla
+	 * 
 	 * @return
 	 */
 	public boolean getConfirmacion() {
@@ -259,5 +297,5 @@ public class JPanelConsultar extends JPanel {
 		}
 		return false;
 	}
-	
+
 }

@@ -16,7 +16,10 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeListener;
 
 import com.vonkazo.proyectofinal.modelo.Eficiencia;
+import com.vonkazo.proyectofinal.modelo.ExceptionNombreIgual;
+import com.vonkazo.proyectofinal.modelo.ExceptionNombreVacio;
 import com.vonkazo.proyectofinal.modelo.Marca;
+import com.vonkazo.proyectofinal.modelo.Modelo;
 import com.vonkazo.proyectofinal.persistencia.GestorBBDD;
 
 import javax.swing.event.ChangeEvent;
@@ -24,11 +27,17 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class JPanelEditar extends JPanel {
+	// Componentes
+	private JComboBox<String> cBMarcas;
+	private JComboBox<String> cBEficiencia;
+	JSlider sConsumo;
 	private JTextField tFModelo;
+	JSlider sEmisiones;
+	private boolean pasa = false;
 
 	/**
-	 * Jpanel para la edicion de datos de un modelo que recoge segun la tupla seleccionada
-	 * en la vista
+	 * Jpanel para la edicion de datos de un modelo que recoge segun la tupla
+	 * seleccionada en la vista
 	 */
 	public JPanelEditar() {
 		setLayout(new BorderLayout(0, 0));
@@ -60,11 +69,11 @@ public class JPanelEditar extends JPanel {
 		lblCalificacinEnergtica.setBounds(20, 202, 159, 14);
 		panel.add(lblCalificacinEnergtica);
 
-		JComboBox<String> cBMarcas = new JComboBox<String>();
+		cBMarcas = new JComboBox<String>();
 		cBMarcas.setBounds(204, 11, 169, 20);
 		panel.add(cBMarcas);
 
-		JComboBox<String> cBEficiencia = new JComboBox<String>();
+		cBEficiencia = new JComboBox<String>();
 		cBEficiencia.setBounds(204, 199, 208, 20);
 		panel.add(cBEficiencia);
 
@@ -77,7 +86,7 @@ public class JPanelEditar extends JPanel {
 		lConsumoContador.setBounds(383, 110, 46, 20);
 		panel.add(lConsumoContador);
 
-		JSlider sConsumo = new JSlider();
+		sConsumo = new JSlider();
 		sConsumo.setMaximum(205);
 		sConsumo.setValue(0);
 		sConsumo.addChangeListener(new ChangeListener() {
@@ -94,7 +103,7 @@ public class JPanelEditar extends JPanel {
 		lEmisionesContador.setBounds(383, 155, 46, 20);
 		panel.add(lEmisionesContador);
 
-		JSlider sEmisiones = new JSlider();
+		sEmisiones = new JSlider();
 		sEmisiones.setMajorTickSpacing(5);
 		sEmisiones.setMaximum(999);
 		sEmisiones.addChangeListener(new ChangeListener() {
@@ -106,17 +115,67 @@ public class JPanelEditar extends JPanel {
 		sEmisiones.setBounds(204, 161, 169, 14);
 		panel.add(sEmisiones);
 
+		JButton btnGuardar = new JButton("Guardar");
+		btnGuardar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					GestorBBDD gb = new GestorBBDD();
+					String eficiencia = cBEficiencia.getSelectedItem().toString();
+					String mar = cBMarcas.getSelectedItem().toString();
+					for (Modelo mo : gb.cargaModelos()) {
+						if (tFModelo.getText().trim().length() == 0) {
+							throw new ExceptionNombreVacio();
+						} else {
+							if(mo.getModelo().equalsIgnoreCase(tFModelo.getText())) {
+								gb.cargarTuplaEditada(gb.cargaMarcaEspecifica(mar), tFModelo.getText(),
+										(float) sConsumo.getValue(), (float) sEmisiones.getValue(), eficiencia, mo.getId());
+								
+								break;
+							}
+						}
+
+					}
+
+					gb.cerrarConexion();
+					JOptionPane.showMessageDialog(null, "Modelo actualizado");
+
+				} catch (SQLException e1) {
+					if (e1.getErrorCode() == 0) {
+						JOptionPane.showMessageDialog(null, "Fallo en la conexion con el servidor");
+					} else {
+						JOptionPane.showMessageDialog(null,
+								"Error SQL: " + e1.getErrorCode() + " (Consultalo con un administrador)");
+					}
+				} catch (ClassNotFoundException e1) {
+					JOptionPane.showMessageDialog(null, "Error carga driver");
+				} catch (ExceptionNombreVacio e1) {
+					JOptionPane.showMessageDialog(null, "El modelo esta vacio");
+				}
+			}
+		});
+		toolBar.add(btnGuardar);
+
+	}
+	/**
+	 * Metodo que llamamos en un metodo del jframe antes de cambiar al panel de editar
+	 * Cargamos el valor de los atributos del modelo que recibe en los elementos
+	 * @param mo recibe modelo del jpanel consultar
+	 */
+	public void cargaDatos(Modelo mo) {
 		try {
 			GestorBBDD gb = new GestorBBDD();
-
 			for (Marca m : gb.cargaMarcas()) {
 				cBMarcas.addItem(m.getMarca());
 			}
-
+			System.out.println(mo.getId_marca());
+			cBMarcas.setSelectedItem(gb.buscaMarca(mo.getId_marca()));
 			for (Eficiencia e : gb.cargaCalificacionEnergetica()) {
 				cBEficiencia.addItem(e.getcEnergetica());
 			}
-
+			cBEficiencia.setSelectedItem(mo.getC_energetica());
+			tFModelo.setText(mo.getModelo());
+			sConsumo.setValue((int) mo.getConsumo());
+			sEmisiones.setValue((int) mo.getEmisiones());
 			gb.cerrarConexion();
 		} catch (ClassNotFoundException e1) {
 			JOptionPane.showMessageDialog(null, "Error carga driver");
@@ -129,9 +188,5 @@ public class JPanelEditar extends JPanel {
 			}
 
 		}
-
-		JButton btnGuardar = new JButton("Guardar");
-		toolBar.add(btnGuardar);
-
 	}
 }

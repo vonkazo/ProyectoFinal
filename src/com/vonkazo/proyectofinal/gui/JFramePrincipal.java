@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import com.vonkazo.proyectofinal.modelo.Modelo;
 import com.vonkazo.proyectofinal.util.GestorJTable;
 
 import javax.swing.JMenuBar;
@@ -22,12 +23,13 @@ import java.awt.event.ActionEvent;
  * Jframe (Vista) principal de la aplicacion En este mostraremos diferentes
  * jpanel dependiendo de que quiera el usuario
  */
-public class jFramePrincipal extends JFrame {
+public class JFramePrincipal extends JFrame {
 	// Jpanel de la aplicacion
 	private JPanel contentPane;
 	private JPanelCreacion creacion;
-	private JPanelConsultar consulta;
+	private static JPanelConsultar consulta;
 	private JPanelEditar editar;
+	
 
 	/**
 	 * Lanza la app
@@ -36,7 +38,11 @@ public class jFramePrincipal extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					jFramePrincipal frame = new jFramePrincipal();
+					JFramePrincipal frame = new JFramePrincipal();
+					consulta = new JPanelConsultar(frame);
+					
+					frame.contentPane.add(consulta, "PanelConsulta");
+					frame.cambiarPantalla("PanelConsulta");
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -49,7 +55,7 @@ public class jFramePrincipal extends JFrame {
 	 * Jframe principal donde mostramos todos los jpanel y los menus respectivos en
 	 * funcion de que opcion pulsemos
 	 */
-	public jFramePrincipal() {
+	public JFramePrincipal() {
 		setTitle("Concesionario");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 699, 514);
@@ -100,17 +106,28 @@ public class jFramePrincipal extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-
-		creacion = new JPanelCreacion();
-		consulta = new JPanelConsultar();
 		editar = new JPanelEditar();
+		creacion = new JPanelCreacion();
 		contentPane.setLayout(new CardLayout(0, 0));
-		contentPane.add(consulta, "PanelConsulta");
-		contentPane.add(creacion, "PanelCreacion");
 		contentPane.add(editar, "PanelEditar");
+		contentPane.add(creacion, "PanelCreacion");
+		
 	}
-
+	/**
+	 * Metodo que utilizamos para cambiar de panel
+	 * que recibe el nombre del jpanel
+	 * @param nombre
+	 */
 	public void cambiarPantalla(String nombre) {
+		((CardLayout) contentPane.getLayout()).show(contentPane, nombre);
+	}
+	/**
+	 * Sobrecarga del metodo que ademas llama a un metodo del jpaneleditar
+	 * @param nombre
+	 * @param m
+	 */
+	public void cambiarPantalla(String nombre, Modelo m) {
+		editar.cargaDatos(m);
 		((CardLayout) contentPane.getLayout()).show(contentPane, nombre);
 	}
 }

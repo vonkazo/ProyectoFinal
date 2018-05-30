@@ -92,7 +92,23 @@ public class GestorBBDD {
 		st.close();
 		return aLMarcas;
 	}
+	
+	public int cargaMarcaEspecifica(String marca) throws SQLException {
+		int m = 0;
+		Statement st = null;
+		ResultSet rs = null;
 
+		String query = "SELECT ID FROM marcas WHERE MARCA='"+marca+"'";
+		st = conexion.createStatement();
+		rs = st.executeQuery(query);
+		while (rs.next() == true) {
+			m = rs.getInt(1);
+		}
+		rs.close();
+		st.close();
+		return m;
+	}
+	
 	/**
 	 * Metodo que devuelve un arraylist y que utilizamos en la vista para obtener en
 	 * el combobox la calificacion energetica
@@ -196,7 +212,7 @@ public class GestorBBDD {
 		String query = "SELECT m.* " + "FROM modelos m, marcas ma " + "WHERE m.ID_MARCA = ma.ID AND ma.MARCA = '"
 				+ marca + "' LIMIT 100";
 		st = conexion.createStatement();
-
+		//System.out.println(query);
 		rs = st.executeQuery(query);
 		while (rs.next() == true) {
 			m = new Modelo(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getFloat(4), rs.getFloat(5),
@@ -295,8 +311,11 @@ public class GestorBBDD {
 		st.close();
 		return aLModelos;
 	}
+
 	/**
-	 * Metodo que borra el modelo seleccionado en la tabla tomando de referencia su id
+	 * Metodo que borra el modelo seleccionado en la tabla tomando de referencia su
+	 * id
+	 * 
 	 * @param id
 	 * @return
 	 * @throws SQLException
@@ -314,9 +333,10 @@ public class GestorBBDD {
 		}
 		return insertado;
 	}
-	
+
 	/**
 	 * Metodo para realizar la actualizacion de datos de un modelo.
+	 * 
 	 * @param marca
 	 * @param modelo
 	 * @param consumo
@@ -326,22 +346,38 @@ public class GestorBBDD {
 	 * @return insertado
 	 * @throws SQLException
 	 */
-	public boolean editarTupla(String marca, String modelo, float consumo, float emisiones, String c_energetica, int id) throws SQLException {
-
+	
+	public boolean cargarTuplaEditada(int id_marca, String modelo, float consumo, float emisiones, String c_energetica, int id) throws SQLException {
 		boolean insertado = false;
-		String sql = "UPDATE modelos SET ID_MARCA=?, MODELO=?, CONSUMO=?, EMISIONES=?, C_ENERGETICA=? WHERE ID=?";
-		PreparedStatement ps = conexion.prepareStatement(sql);
-		ps.setString(1, marca);
-		ps.setString(2, modelo);
-		ps.setFloat(3, consumo);
-		ps.setFloat(4, emisiones);
-		ps.setString(5, c_energetica);
-		ps.setInt(6, id);
-		int numRegistrosActualizados = ps.executeUpdate();
-		conexion.setAutoCommit(true);
+		Statement st = null;
+		String query = "UPDATE modelos SET ID_MARCA="+ id_marca +", MODELO='"+modelo+"', CONSUMO="+consumo+", EMISIONES="+emisiones+", C_ENERGETICA='"+c_energetica+"', ID="+id+" WHERE ID="+id;
+		st = conexion.createStatement();
+
+		int numRegistrosActualizados = st.executeUpdate(query);
+		
 		if (numRegistrosActualizados == 1) {
 			insertado = true;
 		}
+		
+		st.close();
 		return insertado;
+	}
+	
+	public String buscaMarca(int id) throws SQLException {
+		String marca = null;
+		ResultSet rs = null;
+		Statement st = null;
+
+		String sql = "SELECT MARCA FROM marcas WHERE ID = " + id;
+		st = conexion.createStatement();
+		rs = st.executeQuery(sql);
+		while (rs.next() == true) {
+			marca = rs.getString(1);
+		}
+		
+		
+		rs.close();
+		st.close();
+		return marca;
 	}
 }
